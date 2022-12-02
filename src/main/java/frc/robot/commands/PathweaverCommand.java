@@ -81,21 +81,8 @@ public class PathweaverCommand extends SequentialCommandGroup {
           if(isFirstPath){
               m_drive.resetOdometry(traj.getInitialPose());
           }
-        }),
-        new PPRamseteCommand(
-            traj, 
-            m_drive.getPose(), // Pose supplier
-            new RamseteController(),
-            new SimpleMotorFeedforward(KS, KV, KA),
-            m_drive.getDifferentialDriveKinematics(), // DifferentialDriveKinematics
-            m_drive.getWheelSpeeds(), // DifferentialDriveWheelSpeeds supplier
-            new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-            new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
-            this::outputVolts, // Voltage biconsumer
-            eventMap, // This argument is optional if you don't use event markers
-            this // Requires this drive subsystem
-        )
-    );
+        }));
+        
 }
 
 }

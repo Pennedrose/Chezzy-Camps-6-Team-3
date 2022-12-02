@@ -42,8 +42,10 @@ public class Drivetrain extends SubsystemBase {
 
   
 
-  PIDController m_pid = new PIDController(Constants.drive.kP,Constants.drive.kI, Constants.drive.kD);
-  PIDController m_Vpid = new PIDController(Constants.drive.kP,Constants.drive.kI, Constants.drive.kD);
+  PIDController m_Lpid = new PIDController(Constants.drive.kLP,Constants.drive.kLI, Constants.drive.kLD);
+  PIDController m_Rpid = new PIDController(Constants.drive.kRP,Constants.drive.kRI, Constants.drive.kRD);
+  PIDController m_Lvelpid = new PIDController(Constants.drive.kLP,Constants.drive.kLI, Constants.drive.kLD);
+  PIDController m_Rvelpid = new PIDController(Constants.drive.kRP,Constants.drive.kRI, Constants.drive.kRD);
   boolean pidOn = false;
   boolean vpidOn = false;
   double sp = 1000;
@@ -60,7 +62,10 @@ public class Drivetrain extends SubsystemBase {
   double rightVelocity = wheelSpeeds.rightMetersPerSecond;
 
   public Drivetrain() {
-    m_pid.setTolerance(5, 10);
+    m_Lpid.setTolerance(5, 10);
+    m_Rpid.setTolerance(5, 10);
+    m_Lvelpid.setTolerance(5, 10);
+    m_Rvelpid.setTolerance(5, 10);
     m_leftMotor1 = MotorFactory.createTalonFX(Constants.drive.kLeftMotor1);
     m_rightMotor1 = MotorFactory.createTalonFX(Constants.drive.kRightMotor1);
     m_leftMotor2 = MotorFactory.createTalonFX(Constants.drive.kLeftMotor2);
@@ -89,8 +94,8 @@ public class Drivetrain extends SubsystemBase {
   {
     if(vpidOn == true)
     {
-        m_leftMotor1.set(m_Vpid.calculate(m_leftMotor1.getSelectedSensorVelocity(), targetVelocity ));
-        m_rightMotor1.set(m_Vpid.calculate(m_rightMotor1.getSelectedSensorVelocity(), targetVelocity));
+        m_leftMotor1.set(m_Lvelpid.calculate(m_leftMotor1.getSelectedSensorVelocity(), targetVelocity ));
+        m_rightMotor1.set(m_Rvelpid.calculate(m_rightMotor1.getSelectedSensorVelocity(), targetVelocity));
     }
     else
     {
@@ -103,8 +108,8 @@ public class Drivetrain extends SubsystemBase {
    {
     if(pidOn == true)
     {
-        m_leftMotor1.set(m_pid.calculate(m_leftMotor1.getSelectedSensorPosition(), sp));
-        m_rightMotor1.set(m_pid.calculate(m_rightMotor1.getSelectedSensorPosition(), sp));
+        m_leftMotor1.set(m_Lpid.calculate(m_leftMotor1.getSelectedSensorPosition(), sp));
+        m_rightMotor1.set(m_Rpid.calculate(m_rightMotor1.getSelectedSensorPosition(), sp));
     }
     else
     {
@@ -192,10 +197,10 @@ public class Drivetrain extends SubsystemBase {
   }
   public void reset()
   {
-    m_pid.reset();
+    //m_pid.reset();
   }
   public boolean getPidone(){
-    return m_pid.atSetpoint();
+    return false;//m_pid.atSetpoint();
   }
   
 
